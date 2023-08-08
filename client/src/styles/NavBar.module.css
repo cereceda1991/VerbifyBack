@@ -1,0 +1,36 @@
+.nav {
+  font-family: 'Sora', sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #212121;
+  padding: 0px 96px;
+  height: 110px;
+}
+
+.nav div {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  font-family: 'Sora', sans-serif;
+  background-color: #D39245;
+  border-radius: 8px;
+  min-height: 37px;
+  padding-inline: 20px;
+  border: 0px;
+  margin-block: 10px;
+  margin-inline: 20px;
+}
+
+.link {
+  font-family: 'Sora', sans-serif;
+  text-decoration: underline;
+}
+
+@media (max-width: 1120px) {
+  .nav {
+    padding-inline: 30px;
+  }
+}

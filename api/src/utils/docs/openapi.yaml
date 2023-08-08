@@ -1,0 +1,1034 @@
+openapi: 3.0.3
+info:
+  title: Verbify - OpenAPI 3.0
+  description: |-
+    Verbify API endpoints - Server based on the OpenAPI 3.0 specification.  
+  version: 1.0.11
+
+servers:
+  - url: http://localhost:8080/api/
+tags:
+  - name: courses
+    description: Everything about Courses
+  - name: modules
+    description: Eveything about Modules
+  - name: classes
+    description: Eveything about Classes
+  - name: users
+    description: Operations about user
+
+paths:
+  /courses:
+    get:
+      tags:
+        - courses
+      summary: Get all existing courses
+      description: Get all existing course
+      operationId: getCourses
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Courses'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Courses'
+        '400':
+          description: Invalid request
+        '404':
+          description: Course not found
+        '405':
+          description: Validation exception
+    post:
+      tags:
+        - courses
+      summary: Add a new course to the app
+      description: Add a new course to the app
+      operationId: addCourse
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Create a new course in the app
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Courses'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Courses'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Courses'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Courses'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Courses'
+        '405':
+          description: Invalid input
+      security:
+        - api_key: []
+  /courses/populated:
+    get:
+      tags:
+        - courses
+      summary: Get all existing courses populated with all information
+      description: Get all existing courses populated with information
+      operationId: getCoursesPopulated
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Courses'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Courses'
+        '400':
+          description: Invalid request
+        '404':
+          description: Course not found
+        '405':
+          description: Validation exception
+  /courses/{Id}:
+    get:
+      tags:
+        - courses
+      summary: Find course by ID
+      description: Returns a single course
+      operationId: getCourseById
+      parameters:
+        - name: Id
+          in: path
+          description: ID of course to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Courses'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Courses'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Course not found
+    put:
+      tags:
+        - courses
+      summary: Updates a course in the app with form data
+      description: ''
+      operationId: updateCourseWithForm
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: ID of Course that needs to be updated
+          required: true
+          schema:
+            type: string
+            format: objectId
+        - name: name
+          in: query
+          description: Name of course that needs to be updated
+          schema:
+            type: string
+        - name: description
+          in: query
+          description: Description of course that needs to be updated
+          schema:
+            type: string
+        - name: imageURL
+          in: query
+          description: URL  of image course cover that needs to be updated
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Level of course that needs to be updated
+          schema:
+            type: string
+        - name: isPublic
+          in: query
+          description: Status of course that needs to be updated
+          schema:
+            type: boolean
+        - name: tags
+          in: query
+          description: Tags of course that needs to be updated
+          schema:
+            type: string
+        - name: module
+          in: query
+          description: Array of modules that needs to be updated
+          schema:
+            type: array
+            items: 
+              $ref: '#/components/schemas/Modules'
+        - name: isCompleted
+          in: query
+          description: Completed status of course that needs to be updated
+          schema:
+            type: boolean
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - api_key: []
+    delete:
+      tags:
+        - courses
+      summary: Deletes a course
+      description: delete a course
+      operationId: deleteCourse
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: Course id to delete
+          required: true
+          schema:
+            type: string
+            format: objectId
+      responses:
+        '400':
+          description: Invalid Course value
+      security:
+        - api_key: []
+  /courses/{courseId}/modules:
+    get:
+      tags:
+        - courses
+      summary: Return all modules of the course given by ID
+      description: Return all modules of the course given by ID
+      operationId: getModulesByCourse
+      parameters:
+        - name: courseId
+          in: path
+          description: ID of course
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modules'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Modules'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Course not found
+  /courses/{courseId}/modules/{moduleId}:
+    get:
+      tags:
+        - courses
+      summary: Return one module of the course given by ID
+      description: Return one module of the course given by ID
+      operationId: getOneModuleByCourse
+      parameters:
+        - name: courseId
+          in: path
+          description: ID of course
+          required: true
+          schema:
+            type: string
+        - name: moduleId
+          in: path
+          description: ID of module
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modules'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Modules'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Module not found
+  /modules:
+    get:
+      tags:
+        - modules
+      summary: Get all existing modules
+      description: Get all existing module
+      operationId: getModules
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modules'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Modules'
+        '400':
+          description: Invalid request
+        '404':
+          description: Module not found
+        '405':
+          description: Validation exception
+    post:
+      tags:
+        - modules
+      summary: Add a new module to the course
+      description: Add a new module to the course
+      operationId: addModule
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Create a new module in the course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Modules'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Modules'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Modules'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modules'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Modules'
+        '405':
+          description: Invalid input
+      security:
+        - api_key: []
+  /modules/{Id}:
+    get:
+      tags:
+        - modules
+      summary: Find module by ID
+      description: Returns a single module
+      operationId: getModuleById
+      parameters:
+        - name: Id
+          in: path
+          description: ID of course to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modules'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Modules'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Module not found
+    put:
+      tags:
+        - modules
+      summary: Update modules from data
+      description: ''
+      operationId: updateModuleWithForm
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: ID of module that needs to be updated
+          required: true
+          schema:
+            type: string
+            format: objectId
+        - name: name
+          in: query
+          description: Name of module that needs to be updated
+          schema:
+            type: string
+        - name: classes
+          in: query
+          description: Array of classes that needs to be updated
+          schema:
+            type: array
+            items: 
+              $ref: '#/components/schemas/Classes'
+        - name: isCompleted
+          in: query
+          description: Completed status of module that needs to be updated
+          schema:
+            type: boolean
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - api_key: []
+    delete:
+      tags:
+        - modules
+      summary: Deletes a module
+      description: delete a module
+      operationId: deleteModule
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: module id to delete
+          required: true
+          schema:
+            type: string
+            format: objectId
+      responses:
+        '400':
+          description: Invalid module value
+      security:
+        - api_key: []
+  /modules/{moduleId}/classes:
+    get:
+      tags:
+        - modules
+      summary: Return all classes of the module given by ID
+      description: Return all classes of the module given by ID
+      operationId: getClassesByModule
+      parameters:
+        - name: moduleId
+          in: path
+          description: ID of module
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classes'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Classes'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Module not found
+  /modules/{moduleId}/classes/{classId}:
+    get:
+      tags:
+        - modules
+      summary: Return one class of the module given by ID
+      description: Return one class of the class given by ID
+      operationId: getOneClassByModule
+      parameters:
+        - name: moduleId
+          in: path
+          description: ID of module
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          description: ID of class
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classes'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Classes'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Class not found
+  /classes:
+    get:
+      tags:
+        - classes
+      summary: Get all existing classes
+      description: Get all existing classes
+      operationId: getclasses
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classes'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Classes'
+        '400':
+          description: Invalid request
+        '404':
+          description: class not found
+        '405':
+          description: Validation exception
+    post:
+      tags:
+        - classes
+      summary: Add a new class to the module
+      description: Add a new class to the module
+      operationId: addClass
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Create a new class in the module
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classes'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Classes'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Classes'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classes'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Classes'
+        '405':
+          description: Invalid input
+      security:
+        - api_key: []
+  /classes/{Id}:
+    get:
+      tags:
+        - classes
+      summary: Find class by ID
+      description: Returns a single class
+      operationId: getClassById
+      parameters:
+        - name: Id
+          in: path
+          description: ID of class to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classes'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Classes'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Class not found
+    put:
+      tags:
+        - classes
+      summary: Updates a class from data
+      description: ''
+      operationId: updateClassWithForm
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: ID of class that needs to be updated
+          required: true
+          schema:
+            type: string
+            format: objectId
+        - name: name
+          in: query
+          description: Name of class that needs to be updated
+          schema:
+            type: string
+        - name: content
+          in: query
+          description: content of class that needs to be updated
+          schema:
+            type: string
+        - name: videoURL
+          in: query
+          description: URL  of video that needs to be updated
+          schema:
+            type: string
+        - name: isCompleted
+          in: query
+          description: Completed status of class that needs to be updated
+          schema:
+            type: boolean
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - api_key: []
+    delete:
+      tags:
+        - classes
+      summary: Deletes a class
+      description: delete a class
+      operationId: deleteClass
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: Class id to delete
+          required: true
+          schema:
+            type: string
+            format: objectId
+      responses:
+        '400':
+          description: Invalid Class value
+      security:
+        - api_key: []
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all existing users
+      description: Get all existing users
+      operationId: getusers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Users'
+        '400':
+          description: Invalid request
+        '404':
+          description: user not found
+        '405':
+          description: Validation exception
+      security:
+        - api_key: []
+    post:
+      tags:
+        - users
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Users'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Users'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Users'
+      security:
+        - api_key: []
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: Create a user with register method
+      description: Create a user with register method
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Users'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Users'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Users'
+  /auth/signin:
+    post:
+      tags:
+        - auth
+      summary: Logs user into the system with email and pass
+      description: 'Login user with password and email'
+      operationId: loginUser
+      parameters:
+        - name: email
+          in: query
+          description: The user email for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /auth/google:
+    post:
+      tags:
+        - auth
+      summary: Logs user into the system with google credentials
+      description: 'Login user with google account'
+      operationId: loginGoogleUser
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid google account supplied
+  /users/{email}:
+    get:
+      tags:
+        - users
+      summary: Get user by user email
+      description: ''
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: path
+          description: 'The email of the user that needs to be fetched. Use user1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Users'
+        '400':
+          description: Invalid email supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+    put:
+      tags:
+        - users
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: email
+          in: path
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Users'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Users'
+      responses:
+        default:
+          description: successful operation
+      security:
+        - api_key: []
+    delete:
+      tags:
+        - users
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: email
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid email supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+components:
+  schemas:
+    Courses:
+      type: object
+      properties:
+        id:
+          type: string
+          format: objectId
+          example: '6427c38d08b86ce760a1fa47'
+        name:
+          type: string
+          example: 'Inglés básico'
+        description:
+          type: string
+          example: 'Curso de inglés para estudiantes principiantes'
+        imageURL:
+          type: string
+          example: 'cover.png'
+        level:
+          type: string
+          example: beginner
+        isPublic:
+          type: boolean
+          example: true
+        tags: 
+          type: string
+        modules: 
+          type: array
+          xml:
+            name: modules
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Modules'
+        isComplete:
+          type: boolean
+          example: false
+      xml:
+        name: course
+    Modules:
+      type: object
+      properties:
+        id:
+          type: string
+          format: objectId
+          example: '6427c38d08b86ce760a1fa47'
+        name:
+          type: string
+          example: 'Introduction'
+        subtitle:
+          type: string
+          example: 'Inglés conversacional'
+        isCompleted:
+          type: boolean
+        classes:
+          type: array
+          xml:
+            name: classes
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Classes'
+      xml: 
+        name: module
+    Classes:
+      type: object
+      properties:
+        id:
+          type: string
+          format: objectId
+          example: '6427c38d08b86ce760a1fa47'
+        name:
+          type: string
+          example: 'Verb To Be'
+        content:
+          type: string
+          example: 'Clase del verbo to be, explicado y con parte practica'
+        videoURL:
+          type: string
+          example: 'https://www.youtube.com/watch?v=a6o5tq9pV5I'
+        isCompleted:
+          type: boolean
+          example: false
+      xml:
+        name: classes
+    Users:
+      type: object
+      properties:
+        id:
+          type: string
+          format: objectId
+          example: '6427c38d08b86ce760a1fa47'
+        email:
+          type: string
+          example: john@email.com
+        passwordHash:
+          type: string
+          example: '12345'
+        phone:
+          type: string
+          example: '+54 011 4789455'
+        bio:
+          type: string
+          example: Ingeniero
+        country: 
+          type: string
+          example: Colombia
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        isSuscribed:
+          type: boolean
+          example: true
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Users'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
